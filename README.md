@@ -1,6 +1,6 @@
 # RSA Encryption Algorithm
 
-![RSA Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/RSA_Logo.svg/1200px-RSA_Logo.svg.png)
+![RSA Logo](RSA_Security_logo2.svg.png)
 
 This repository provides an implementation of the RSA encryption algorithm. RSA is a widely used public-key cryptosystem that is essential for secure data transmission and digital signatures.
 

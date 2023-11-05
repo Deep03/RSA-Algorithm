@@ -50,7 +50,6 @@ public class Main {
     public static void myLDE() {
         int x;
         int d;
-        int 
     }
 
     public static void main(String[] args) {
