@@ -2,7 +2,7 @@
 
 ![RSA Logo](RSA_Security_logo2.svg.png)
 
-This repository provides an implementation of the RSA encryption algorithm. RSA is a widely used public-key cryptosystem that is essential for secure data transmission and digital signatures.
+This repository provides an implementation of the RSA encryption algorithm and serves the purpose of teaching myself working with Java. RSA is a widely used public-key cryptosystem that is essential for secure data transmission and digital signatures.
 
 ## Introduction
 
@@ -18,9 +18,9 @@ The RSA encryption algorithm, named after its inventors Ron Rivest, Adi Shamir, 
 
 ## Repository Contents
 
-This repository contains the following components:
+This repository is going to contain the following components:
 
-- **Source Code:** The implementation of the RSA encryption and decryption algorithms in your language of choice.
+- **Source Code:** The implementation of the RSA encryption and decryption algorithms in Java.
 
 - **Example Usage:** A guide or code examples on how to use the RSA algorithm for encryption and decryption.
 
@@ -32,16 +32,12 @@ This repository contains the following components:
 
 To get started, clone this repository to your local machine and follow the documentation to understand how to use the RSA encryption algorithm. You can use the provided sample keys to experiment with encryption and decryption.
 
-## Contributions
-
-Contributions to this repository are welcome! If you have ideas for improvements, bug fixes, or additional features, please open an issue or submit a pull request. Let's work together to make this implementation even better.
-
 ## License
 
 This project is licensed under the [MIT License](LICENSE), which means you are free to use, modify, and distribute this code. Please refer to the LICENSE file for more details.
 
 ## Acknowledgments
 
-This implementation is inspired by the work of Ron Rivest, Adi Shamir, and Leonard Adleman, the creators of the RSA algorithm. We appreciate their contributions to the field of cryptography.
+This implementation is inspired by the work of Ron Rivest, Adi Shamir, and Leonard Adleman, the creators of the RSA algorithm and my intention to create my own Java module for a future project. I appreciate their contributions to the field of cryptography..
 
-Thank you for visiting this repository. We hope it helps you understand and use the RSA encryption algorithm effectively.
+Thank you for visiting this repository. I hope it helps you understand and use the RSA encryption algorithm effectively.
