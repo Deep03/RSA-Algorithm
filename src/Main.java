@@ -1,9 +1,12 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 public class Main {
 
     // constants for generatePrime function
-    private static final int DESIRED_DIGITS = 300;
+    private static final int DESIRED_DIGITS = 3000;
     private static final int CERTAINTY = 100;
 
 
@@ -83,8 +86,14 @@ public class Main {
                 break;
             }
         }
-        System.out.println(keyPair.e);
 
+        // file handler
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("encryptKeys.txt"))) {
+            writer.write("The value of private exponent d: " + keyPair.d + "\n");
+            writer.write("The value of public exponent d: " + keyPair.e + "\n");
+        } catch (IOException e) {
+            System.out.println("Error Occurred: " + e);
+        }
     }
 
 }
