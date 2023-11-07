@@ -2,11 +2,14 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.util.Arrays;
+
 public class Main {
 
-    // constants for generatePrime function
-    private static final int DESIRED_DIGITS = 3000;
+    // constants for generatePrime function, change DESIRED_DIGITS to 3000 for build 1
+    private static final int DESIRED_DIGITS = 20;
     private static final int CERTAINTY = 100;
 
 
@@ -87,12 +90,25 @@ public class Main {
             }
         }
 
-        // file handler
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("encryptKeys.txt"))) {
-            writer.write("The value of private exponent d: " + keyPair.d + "\n");
-            writer.write("The value of public exponent d: " + keyPair.e + "\n");
-        } catch (IOException e) {
-            System.out.println("Error Occurred: " + e);
+//        // file handler
+//        try (BufferedWriter writer = new BufferedWriter(new FileWriter("encryptKeys.txt"))) {
+//            writer.write("The value of private exponent d: " + keyPair.d + "\n");
+//            writer.write("The value of public exponent d: " + keyPair.e + "\n");
+//        } catch (IOException e) {
+//            System.out.println("Error Occurred: " + e);
+//        }
+        String msg = "Hello World";
+        byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
+        BigInteger m;
+        BigInteger c;
+        BigInteger r;
+        System.out.println(Arrays.toString(msgBytes));
+        for (int i = 0; i < msgBytes.length; i++) {
+            m = new BigInteger(String.valueOf(msgBytes[i]));
+            c = m.modPow(keyPair.e, keyPair.n);
+            r  = c.modPow(keyPair.d, keyPair.n);
+            System.out.println("The encrypted code is: " + c);
+            System.out.println("The descrypted code is: " + r);
         }
     }
 

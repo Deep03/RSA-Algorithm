@@ -32,6 +32,29 @@ public class LinDinEqSolve {
         result[2] = temp[2];
         return result;
     }
+
+    public static void solve(long a, long b)
+    {
+        long x = 0, y = 1, lastx = 1, lasty = 0, temp;
+        while (b != 0)
+        {
+            long q = a / b;
+            long r = a % b;
+
+            a = b;
+            b = r;
+
+            temp = x;
+            x = lastx - q * x;
+            lastx = temp;
+
+            temp = y;
+            y = lasty - q * y;
+            lasty = temp;
+        }
+        System.out.println("Roots  x : "+ lastx +" y :"+ lasty);
+    }
+
     //----------------------------------------------------------------//
     // -----------------------NOT MY CODE-----------------------------------------
 
