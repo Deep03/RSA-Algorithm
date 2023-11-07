@@ -1,6 +1,5 @@
 import java.math.BigInteger;
 import java.security.SecureRandom;
-
 public class Main {
 
     // constants for generatePrime function
@@ -20,40 +19,61 @@ public class Main {
     }
 
 
-    // My algorithm to solve LDE:
-    public static void myLDE() {
-        int x;
-        int d;
-    }
 
-    public static void main(String[] args) {
+    private static BigInteger rsaSetUp(BigInteger p, BigInteger q, BigInteger n, BigInteger UppBound, BigInteger d, BigInteger e) {
         SecureRandom random = new SecureRandom();
 
         // two distinct large prime, for now assume they are distinct
-        BigInteger p = generatePrime(random);
-        BigInteger q = generatePrime(random);
+        p = generatePrime(random);
+        q = generatePrime(random);
 
         // n = pq
-        BigInteger n = p.multiply(q);
+        n = p.multiply(q);
 
         // p - 1 and q - 1
         BigInteger p_one = p.subtract(BigInteger.ONE);
         BigInteger q_one = q.subtract(BigInteger.ONE);
 
-        BigInteger e =  new BigInteger(String.valueOf(3));
+        // public exponent
+        e =  new BigInteger(String.valueOf(3));
 
         // 1 < e < uppBound
-        BigInteger UppBound = p_one.multiply(q_one);
+        UppBound = p_one.multiply(q_one);
 
+        // private exponent
+        d = myLDE(e, UppBound);
+        return d;
+    }
+
+    // My algorithm to solve LDE:
+    public static BigInteger myLDE(BigInteger e, BigInteger UppBound) {
+        BigInteger d = null;
         // ed congruent 1 mod(uppBound).
-        BigInteger d;
         // because p -1 and q - 1 might not be co prime, they have to be co prime
-        // e has to be co prime with uppbound
-        try {
+        // e has to be co prime with uppBound
+        if (e.gcd(UppBound).equals(BigInteger.ONE)) {
+            // ed congruent 1 mod(uppBound).
             d = e.modInverse(UppBound);
-        } catch (Exception e) {
-
         }
+        else {
+            return null;
+        }
+        return d;
+    }
+
+    public static void main(String[] args) {
+        BigInteger d = rsaSetUp(null, null, null, null, null, null);
+
+        // keep finding a D that exists such that gcd(e, UppBound) = 1
+        while(true) {
+            if (d == null == true) {
+                d = rsaSetUp(null, null, null, null, null, null);
+            }
+            else {
+                break;
+            }
+        }
+
     }
 
 }
