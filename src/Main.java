@@ -19,31 +19,42 @@ public class Main {
     }
 
 
+    public static class RSAKeyPair {
+        public BigInteger p;
+        public BigInteger q;
+        public BigInteger n;
+        public BigInteger UppBound;
+        public BigInteger d;
+        public BigInteger e;
+    }
 
-    private static BigInteger rsaSetUp(BigInteger p, BigInteger q, BigInteger n, BigInteger UppBound, BigInteger d, BigInteger e) {
+    private static RSAKeyPair rsaSetUp() {
         SecureRandom random = new SecureRandom();
+        RSAKeyPair keyPair = new RSAKeyPair();
 
-        // two distinct large prime, for now assume they are distinct
-        p = generatePrime(random);
-        q = generatePrime(random);
+        // two distinct large primes, for now assume they are distinct
+        keyPair.p = generatePrime(random);
+        keyPair.q = generatePrime(random);
 
         // n = pq
-        n = p.multiply(q);
+        keyPair.n = keyPair.p.multiply(keyPair.q);
 
         // p - 1 and q - 1
-        BigInteger p_one = p.subtract(BigInteger.ONE);
-        BigInteger q_one = q.subtract(BigInteger.ONE);
+        BigInteger p_one = keyPair.p.subtract(BigInteger.ONE);
+        BigInteger q_one = keyPair.q.subtract(BigInteger.ONE);
 
         // public exponent
-        e =  new BigInteger(String.valueOf(3));
+        keyPair.e = new BigInteger(String.valueOf(3));
 
-        // 1 < e < uppBound
-        UppBound = p_one.multiply(q_one);
+        // 1 < e < UppBound
+        keyPair.UppBound = p_one.multiply(q_one);
 
         // private exponent
-        d = myLDE(e, UppBound);
-        return d;
+        keyPair.d = myLDE(keyPair.e, keyPair.UppBound);
+
+        return keyPair;
     }
+
 
     // My algorithm to solve LDE:
     public static BigInteger myLDE(BigInteger e, BigInteger UppBound) {
@@ -62,17 +73,17 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        BigInteger d = rsaSetUp(null, null, null, null, null, null);
-
+        RSAKeyPair keyPair = rsaSetUp();
         // keep finding a D that exists such that gcd(e, UppBound) = 1
         while(true) {
-            if (d == null == true) {
-                d = rsaSetUp(null, null, null, null, null, null);
+            if (keyPair.d == null == true) {
+                keyPair = rsaSetUp();
             }
             else {
                 break;
             }
         }
+        System.out.println(keyPair.e);
 
     }
 
