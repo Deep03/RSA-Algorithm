@@ -1,6 +1,5 @@
 
 import java.math.BigInteger;
-import java.security.SecureRandom;
 
 public class LinDinEqSolve extends Main {
 

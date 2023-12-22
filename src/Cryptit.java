@@ -11,7 +11,7 @@ public class Cryptit extends Main {
 
 
     // constants for generatePrime function, change DESIRED_DIGITS to 3000 for build 1
-    private static final int DESIRED_BIT = 1024;
+    private static final int DESIRED_BIT = 10;
     private static final int CERTAINTY = 100;
 
 
@@ -29,12 +29,14 @@ public class Cryptit extends Main {
     public static class RSAKeyPair {
         public BigInteger p;
         public BigInteger q;
-        public BigInteger n;
+        public BigInteger modulus;
         public BigInteger UppBound;
-        public BigInteger d;
-        public BigInteger e;
+        public BigInteger privateKey;
+        public BigInteger publicKey;
+
     }
 
+    // set up a way to save the data in a database, the private key pair, d and n has to be stored
     private static RSAKeyPair rsaSetUp() {
         SecureRandom random = new SecureRandom();
         RSAKeyPair keyPair = new RSAKeyPair();
@@ -44,63 +46,71 @@ public class Cryptit extends Main {
         keyPair.q = generatePrime(random);
 
         // n = pq
-        keyPair.n = keyPair.p.multiply(keyPair.q);
+        keyPair.modulus = keyPair.p.multiply(keyPair.q);
 
         // p - 1 and q - 1
         BigInteger p_one = keyPair.p.subtract(BigInteger.ONE);
         BigInteger q_one = keyPair.q.subtract(BigInteger.ONE);
 
         // public exponent
-        keyPair.e = new BigInteger(String.valueOf(3));
+        keyPair.publicKey = new BigInteger(String.valueOf(3));
 
         // 1 < e < UppBound
         keyPair.UppBound = p_one.multiply(q_one);
 
         // private exponent
-        keyPair.d =LinDinEqSolve.myLDE(keyPair.e, keyPair.UppBound);
+        keyPair.privateKey =LinDinEqSolve.myLDE(keyPair.publicKey, keyPair.UppBound);
 
         return keyPair;
     }
+    static RSAKeyPair keyPair = rsaSetUp();
+
+
 
     public static boolean enrypt(String msg) {
-        RSAKeyPair keyPair = rsaSetUp();
         // keep finding a D that exists such that gcd(e, UppBound) = 1
         while (true) {
-            if (keyPair.d == null == true) {
+            if (keyPair.privateKey == null == true) {
                 keyPair = rsaSetUp();
             } else {
                 break;
             }
         }
-
         byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
-        BigInteger[] encryptedMsg;
-        BigInteger m;
-        BigInteger c;
-        BigInteger r;
-        for (byte msgByte : msgBytes) {
-            m = new BigInteger(String.valueOf(msgByte));
-            c = m.modPow(keyPair.e, keyPair.n);
-            r = c.modPow(keyPair.d, keyPair.n);
-            System.out.println("The encrypted code is: " + c);
-            System.out.println("The decrypted code is: " + r);
+        int len = msgBytes.length;
+        BigInteger[] encryptedMsg = new BigInteger[len];
+        BigInteger m = null;
+        BigInteger c = null;
+        for (int i = 0; i < len; i++) {
+            m = new BigInteger(String.valueOf(msgBytes[i]));
+            c = m.modPow(keyPair.publicKey, keyPair.modulus);
+            encryptedMsg[i] = c.multiply(BigInteger.valueOf(msgBytes[i]));
         }
         return false;
     }
 
-//    public static boolean decrypt(String msg) {
-//        byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
-//        BigInteger[] encryptedMsg;
-//        BigInteger m;
-//        BigInteger c;
-//        BigInteger r;
-//        for (byte msgByte : msgBytes) {
-//            m = new BigInteger(String.valueOf(msgByte));
-//            c = m.modPow(keyPair.e, keyPair.n);
-//            r = c.modPow(keyPair.d, keyPair.n);
-//            System.out.println("The encrypted code is: " + c);
-//            System.out.println("The decrypted code is: " + r);
-//        }
-//        return false;
-//    }
+
+    // private key = (d, n) = (private key exponent, public moduli)
+    // public key = (e, n) = (public key exponent, public moduli)
+
+    // The one who needs to decrpyt needs the private key so I need to store it somehow
+
+
+    // public static boolean decrypt() {
+    //     BigInteger[] encryptedMsg;
+    //     BigInteger m;
+    //     for (byte msgByte : msgBytes) {
+    //         m = new BigInteger(String.valueOf(msgByte));
+
+    //         // both of them need to be saved
+    //         // encryption code
+    //         c = m.modPow(keyPair.publicKey, keyPair.modulus);
+
+    //         // decryption code
+    //         r = c.modPow(keyPair.privateKey, keyPair.modulus);
+    //     }
+    //     return false;
+    // }
+
+
 }

@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b06eb033-0441-4d01-a0d2-ac1b7f0c9803" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Cryptit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cryptit.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/LinDinEqSolve.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/LinDinEqSolve.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
@@ -13,6 +15,13 @@
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -50,11 +59,26 @@
     &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.editor&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Cryptit">
+    <configuration name="Cryptit" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Cryptit" />
+      <module name="rsaEncoding" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="rsaEncoding" />
@@ -64,6 +88,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Cryptit" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -80,6 +105,19 @@
       <workItem from="1699289282580" duration="3905000" />
       <workItem from="1699295140059" duration="95000" />
       <workItem from="1699338072307" duration="3414000" />
+      <workItem from="1699496553808" duration="6429000" />
+      <workItem from="1699519468115" duration="6000" />
+      <workItem from="1699520449125" duration="182000" />
+      <workItem from="1699594652416" duration="3065000" />
+      <workItem from="1699763121127" duration="5056000" />
+      <workItem from="1699778820578" duration="545000" />
+      <workItem from="1699989316734" duration="2685000" />
+      <workItem from="1700075634757" duration="550000" />
+      <workItem from="1700199808050" duration="599000" />
+      <workItem from="1700274594530" duration="1376000" />
+      <workItem from="1700349910938" duration="2416000" />
+      <workItem from="1703166395272" duration="67000" />
+      <workItem from="1703167992531" duration="1265000" />
     </task>
     <servers />
   </component>
@@ -106,5 +144,9 @@
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

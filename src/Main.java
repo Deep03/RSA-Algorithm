@@ -17,6 +17,7 @@ public class Main {
 //            System.out.println("Error Occurred: " + e);
 //        }
         String msg = "Hello World";
+        Cryptit.enrypt(msg);
     }
 
 }
