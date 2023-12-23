@@ -5,11 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b06eb033-0441-4d01-a0d2-ac1b7f0c9803" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Cryptit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Cryptit.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/LinDinEqSolve.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/LinDinEqSolve.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/db.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/db.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,6 +117,8 @@
       <workItem from="1700349910938" duration="2416000" />
       <workItem from="1703166395272" duration="67000" />
       <workItem from="1703167992531" duration="1265000" />
+      <workItem from="1703305617025" duration="599000" />
+      <workItem from="1703335741032" duration="170000" />
     </task>
     <servers />
   </component>
