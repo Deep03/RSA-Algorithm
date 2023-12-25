@@ -89,28 +89,34 @@ public class Cryptit extends Main {
         return false;
     }
 
+    public static void insert() {
+        boolean state = db.establishConnection();
+        if (state) {
 
+        }
+        else {
+            System.out.println("NO");
+        }
+    }
     // private key = (d, n) = (private key exponent, public moduli)
     // public key = (e, n) = (public key exponent, public moduli)
 
     // The one who needs to decrpyt needs the private key so I need to store it somehow
+     public static boolean decrypt() {
+         BigInteger[] encryptedMsg;
+         BigInteger m;
+         for (byte msgByte : msgBytes) {
+             m = new BigInteger(String.valueOf(msgByte));
 
+             // both of them need to be saved
+             // encryption code
+             c = m.modPow(keyPair.publicKey, keyPair.modulus);
 
-    // public static boolean decrypt() {
-    //     BigInteger[] encryptedMsg;
-    //     BigInteger m;
-    //     for (byte msgByte : msgBytes) {
-    //         m = new BigInteger(String.valueOf(msgByte));
-
-    //         // both of them need to be saved
-    //         // encryption code
-    //         c = m.modPow(keyPair.publicKey, keyPair.modulus);
-
-    //         // decryption code
-    //         r = c.modPow(keyPair.privateKey, keyPair.modulus);
-    //     }
-    //     return false;
-    // }
+             // decryption code
+             r = c.modPow(keyPair.privateKey, keyPair.modulus);
+         }
+         return false;
+     }
 
 
 }
