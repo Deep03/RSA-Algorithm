@@ -1,13 +1,11 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
-import java.util.Arrays;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
-public class Cryptit extends Main {
+public class CryptIt extends Main {
 
 
     // constants for generatePrime function, change DESIRED_DIGITS to 3000 for build 1
@@ -67,7 +65,7 @@ public class Cryptit extends Main {
 
 
 
-    public static boolean enrypt(String msg) {
+    public static BigInteger[] enrypt(String msg) {
         // keep finding a D that exists such that gcd(e, UppBound) = 1
         while (true) {
             if (keyPair.privateKey == null == true) {
@@ -86,37 +84,65 @@ public class Cryptit extends Main {
             c = m.modPow(keyPair.publicKey, keyPair.modulus);
             encryptedMsg[i] = c.multiply(BigInteger.valueOf(msgBytes[i]));
         }
-        return false;
+        return encryptedMsg;
     }
 
-    public static void insert() {
-        boolean state = db.establishConnection();
-        if (state) {
+    public static void insert() throws SQLException {
+        enrypt("Hello");
+        String query = "SELECT EXISTS (SELECT privateexp FROM keypair WHERE ID = 1 AND privateexp IS NOT NULL) AS privateexp_exists, " +
+                "EXISTS (SELECT privatemod FROM keypair WHERE ID = 1 AND privatemod IS NOT NULL) AS privatemod_exists;";
+        ResultSet resultSet = db.executeSql(query);
+        boolean privateexpExists = false;
+        boolean privatemodExists = false;
+        assert resultSet != null;
+        if (resultSet.next()) {
+            privateexpExists = resultSet.getBoolean("privateexp_exists");
+            privatemodExists = resultSet.getBoolean("privatemod_exists");
+        }
+        query = "SELECT privateexp from keypair as privatexp";
+        resultSet = db.executeSql(query);
+        BigInteger privateexp = null;
+        assert resultSet != null;
+        if (resultSet.next()) {
+            privateexp = resultSet.getObject(1, BigInteger.class);
+        }
+        query = "SELECT privatemod from keypair as privatemod";
+        resultSet = db.executeSql(query);
+        BigInteger privatemod = null;
+        assert resultSet != null;
+        if (resultSet.next()) {
+            privatemod = resultSet.getObject(1, BigInteger.class);
+        }
+        assert privatemod != null;
+        if (!privatemod.equals(keyPair.modulus)) {
+            query = String.format("UPDATE keypair SET privatemod = %s;", keyPair.modulus.toString());
+            db.executeSql(query);
+            }
+        assert privateexp != null;
+        if (!privateexp.equals(keyPair.privateKey)) {
+            query = String.format("UPDATE keypair SET privateexp = %s;", keyPair.privateKey.toString());
+            db.executeSql(query);
+            }
+        }
 
-        }
-        else {
-            System.out.println("NO");
-        }
-    }
     // private key = (d, n) = (private key exponent, public moduli)
     // public key = (e, n) = (public key exponent, public moduli)
 
-    // The one who needs to decrpyt needs the private key so I need to store it somehow
-     public static boolean decrypt() {
-         BigInteger[] encryptedMsg;
-         BigInteger m;
-         for (byte msgByte : msgBytes) {
-             m = new BigInteger(String.valueOf(msgByte));
-
-             // both of them need to be saved
-             // encryption code
-             c = m.modPow(keyPair.publicKey, keyPair.modulus);
-
-             // decryption code
-             r = c.modPow(keyPair.privateKey, keyPair.modulus);
-         }
-         return false;
-     }
+    // The one who needs to decrpyt needs the private key(d, n) so I need to store it somehow
+//     public static boolean decrypt(byte[] msgBytes) {
+//         BigInteger m;
+//         for (byte msgByte : msgBytes) {
+//             m = new BigInteger(String.valueOf(msgByte));
+//
+//             // both of them need to be saved
+//             // encryption code
+//             c = m.modPow(keyPair.publicKey, keyPair.modulus);
+//
+//             // decryption code
+//             r = c.modPow(keyPair.privateKey, keyPair.modulus);
+//         }
+//         return false;
+//     }
 
 
 }

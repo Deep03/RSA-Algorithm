@@ -1,25 +1,19 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Properties;
 
 public class db extends Main {
 
-    public static boolean establishConnection() {
+    public static ResultSet executeSql(String query) {
         String url = "jdbc:postgresql://localhost/rootapollo";
         Properties props = new Properties();
         props.setProperty("user", "rootapollo");
         props.setProperty("password", "pass");
-        boolean state = false;
         try {
             Connection db = DriverManager.getConnection(url, props);
-            state = true;
-//            db.close();
-            return state;
+            Statement stmt = db.createStatement();
+            return stmt.executeQuery(query);
         } catch (SQLException e) {
-            e.printStackTrace();
-            return state;
+            return null;
         }
     }
 
