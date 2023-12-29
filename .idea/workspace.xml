@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b06eb033-0441-4d01-a0d2-ac1b7f0c9803" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rsaEncoding/Cryptit$RSAKeyPair.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/rsaEncoding/Cryptit$RSAKeyPair.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rsaEncoding/Cryptit.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/rsaEncoding/Cryptit.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/rsaEncoding/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/rsaEncoding/Main.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +58,7 @@
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15234375",
     "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "editor.reader.mode",
+    "settings.editor.selected.configurable": "preferences.keymap",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -137,7 +133,7 @@
       <workItem from="1703574370495" duration="5988000" />
       <workItem from="1703711403924" duration="10146000" />
       <workItem from="1703769209990" duration="6772000" />
-      <workItem from="1703854066425" duration="3073000" />
+      <workItem from="1703854066425" duration="5502000" />
     </task>
     <servers />
   </component>

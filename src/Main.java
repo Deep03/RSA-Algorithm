@@ -15,5 +15,5 @@ public class Main {
         System.out.println("Encrypted Message:" + Arrays.toString(encryptArr));
         System.out.println("Decrypted Message:" + decryptMsg);
     }
-
 }
+

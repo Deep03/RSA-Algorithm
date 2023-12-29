@@ -12,10 +12,6 @@ public class CryptIt extends Main {
     private static final int DESIRED_BIT = 10;
     private static final int CERTAINTY = 100;
 
-    public CryptIt() throws SQLException {
-    }
-
-
     // uses miller-rabin primality test
     // generatePrime: Function to create two large distinct prime numbers
     private static BigInteger generatePrime(SecureRandom random) {
@@ -64,59 +60,39 @@ public class CryptIt extends Main {
 
         return keyPair;
     }
-    public static boolean insert() throws SQLException {
-        // check if keypair exists-- if not need to call rsaSetup
-        if (keyPair == null || keyPair.modulus == null || keyPair.privateKey == null || keyPair.publicKey == null) {
-            return false;
-        }
 
-        // query to check if privateMod and privateexp exists
-        String query = "SELECT EXISTS (SELECT privateexp FROM keypair WHERE ID = 1 AND privateexp IS NOT NULL) AS privateexp_exists, " +
-                "EXISTS (SELECT privatemod FROM keypair WHERE ID = 1 AND privatemod IS NOT NULL) AS privatemod_exists;";
-        ResultSet resultSet = db.executeSql(query);
-        boolean privateexpExists = false;
-        boolean privatemodExists = false;
+    static RSAKeyPair keyPair = new RSAKeyPair();
+
+    public static void insert() throws SQLException {
+        String query;
+        ResultSet resultSet;
+        query = "SELECT privateexp from keypair as privatexp";
+        resultSet = db.executeSql(query);
+        BigInteger privateexp = null;
         assert resultSet != null;
         if (resultSet.next()) {
-            privateexpExists = resultSet.getBoolean("privateexp_exists");
-            privatemodExists = resultSet.getBoolean("privatemod_exists");
+            privateexp = resultSet.getObject(1, BigInteger.class);
         }
-
-        // if privateModExists and privateExpExists
-        if (privatemodExists && privateexpExists) {
-            query = "SELECT privateexp from keypair as privatexp";
-            resultSet = db.executeSql(query);
-            BigInteger privateexp = null;
-            assert resultSet != null;
-            if (resultSet.next()) {
-                privateexp = resultSet.getObject(1, BigInteger.class);
-            }
-            query = "SELECT privatemod from keypair as privatemod";
-            resultSet = db.executeSql(query);
-            BigInteger privatemod = null;
-            assert resultSet != null;
-            if (resultSet.next()) {
-                privatemod = resultSet.getObject(1, BigInteger.class);
-            }
-            assert privatemod != null;
-            if (!privatemod.equals(keyPair.modulus) && keyPair.modulus != null) {
-                query = String.format("UPDATE keypair SET privatemod = %s;", keyPair.modulus);
-                db.executeSql(query);
-            } else {
-                keyPair.modulus = privatemod;
-            }
-            assert privateexp != null;
-            if (!privateexp.equals(keyPair.privateKey) && keyPair.privateKey != null) {
-                query = String.format("UPDATE keypair SET privateexp = %s;", keyPair.privateKey);
-                db.executeSql(query);
-            } else {
-                keyPair.privateKey = privateexp;
-            }
-            return true;
+        query = "SELECT privatemod from keypair as privatemod";
+        resultSet = db.executeSql(query);
+        BigInteger privatemod = null;
+        assert resultSet != null;
+        if (resultSet.next()) {
+            privatemod = resultSet.getObject(1, BigInteger.class);
         }
-        return false;
+        if (privatemod == null || !privatemod.equals(keyPair.modulus) && keyPair.modulus != null) {
+            query = String.format("UPDATE keypair SET privatemod = %s;", keyPair.modulus);
+            db.executeSql(query);
+        } else {
+            keyPair.modulus = privatemod;
+        }
+        if (privateexp == null || !privateexp.equals(keyPair.privateKey) && keyPair.privateKey != null) {
+            query = String.format("UPDATE keypair SET privateexp = %s;", keyPair.privateKey);
+            db.executeSql(query);
+        } else {
+            keyPair.privateKey = privateexp;
+        }
     }
-    static RSAKeyPair keyPair;
 
     // method to check if data exists in database
     public static boolean exists() throws SQLException {
@@ -132,13 +108,11 @@ public class CryptIt extends Main {
         }
         return false;
     }
+
     public static void generate() throws SQLException {
-        boolean state = insert();
-        String query;
-        if (!state) {
-            keyPair = rsaSetUp();
-        } else {
-            query = "SELECT privatemod from keypair as privatemod";
+        boolean state = exists();
+        if (state) {
+            String query = "SELECT privatemod from keypair as privatemod";
             ResultSet resultSet = db.executeSql(query);
             BigInteger privatemod = null;
             assert resultSet != null;
@@ -154,10 +128,14 @@ public class CryptIt extends Main {
             }
             keyPair.privateKey = privateexp;
             keyPair.modulus = privatemod;
+            keyPair.publicKey = new BigInteger(String.valueOf(3));
+        } else {
+            keyPair = rsaSetUp();
+            insert();
         }
     }
+
     public static BigInteger[] enrypt(String msg) {
-        System.out.println(keyPair.modulus);
         byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
         int len = msgBytes.length;
         BigInteger[] encryptedMsg = new BigInteger[len];
@@ -173,7 +151,6 @@ public class CryptIt extends Main {
     }
 
      public static String decrypt(BigInteger[] msgBytes) {
-        System.out.println(keyPair.privateKey);
          int len = msgBytes.length;
          byte[] bytearr = new byte[len];
          for (int i = 0; i < len; i++) {
