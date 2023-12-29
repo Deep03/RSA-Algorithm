@@ -12,6 +12,9 @@ public class CryptIt extends Main {
     private static final int DESIRED_BIT = 10;
     private static final int CERTAINTY = 100;
 
+    public CryptIt() throws SQLException {
+    }
+
 
     // uses miller-rabin primality test
     // generatePrime: Function to create two large distinct prime numbers
@@ -61,34 +64,13 @@ public class CryptIt extends Main {
 
         return keyPair;
     }
-    static RSAKeyPair keyPair = rsaSetUp();
-
-
-
-    public static BigInteger[] enrypt(String msg) {
-        // keep finding a D that exists such that gcd(e, UppBound) = 1
-        while (true) {
-            if (keyPair.privateKey == null == true) {
-                keyPair = rsaSetUp();
-            } else {
-                break;
-            }
+    public static boolean insert() throws SQLException {
+        // check if keypair exists-- if not need to call rsaSetup
+        if (keyPair == null || keyPair.modulus == null || keyPair.privateKey == null || keyPair.publicKey == null) {
+            return false;
         }
-        byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
-        int len = msgBytes.length;
-        BigInteger[] encryptedMsg = new BigInteger[len];
-        BigInteger m = null;
-        BigInteger c = null;
-        for (int i = 0; i < len; i++) {
-            m = new BigInteger(String.valueOf(msgBytes[i]));
-            c = m.modPow(keyPair.publicKey, keyPair.modulus);
-            encryptedMsg[i] = c.multiply(BigInteger.valueOf(msgBytes[i]));
-        }
-        return encryptedMsg;
-    }
 
-    public static void insert() throws SQLException {
-        enrypt("Hello");
+        // query to check if privateMod and privateexp exists
         String query = "SELECT EXISTS (SELECT privateexp FROM keypair WHERE ID = 1 AND privateexp IS NOT NULL) AS privateexp_exists, " +
                 "EXISTS (SELECT privatemod FROM keypair WHERE ID = 1 AND privatemod IS NOT NULL) AS privatemod_exists;";
         ResultSet resultSet = db.executeSql(query);
@@ -99,50 +81,108 @@ public class CryptIt extends Main {
             privateexpExists = resultSet.getBoolean("privateexp_exists");
             privatemodExists = resultSet.getBoolean("privatemod_exists");
         }
-        query = "SELECT privateexp from keypair as privatexp";
-        resultSet = db.executeSql(query);
-        BigInteger privateexp = null;
+
+        // if privateModExists and privateExpExists
+        if (privatemodExists && privateexpExists) {
+            query = "SELECT privateexp from keypair as privatexp";
+            resultSet = db.executeSql(query);
+            BigInteger privateexp = null;
+            assert resultSet != null;
+            if (resultSet.next()) {
+                privateexp = resultSet.getObject(1, BigInteger.class);
+            }
+            query = "SELECT privatemod from keypair as privatemod";
+            resultSet = db.executeSql(query);
+            BigInteger privatemod = null;
+            assert resultSet != null;
+            if (resultSet.next()) {
+                privatemod = resultSet.getObject(1, BigInteger.class);
+            }
+            assert privatemod != null;
+            if (!privatemod.equals(keyPair.modulus) && keyPair.modulus != null) {
+                query = String.format("UPDATE keypair SET privatemod = %s;", keyPair.modulus);
+                db.executeSql(query);
+            } else {
+                keyPair.modulus = privatemod;
+            }
+            assert privateexp != null;
+            if (!privateexp.equals(keyPair.privateKey) && keyPair.privateKey != null) {
+                query = String.format("UPDATE keypair SET privateexp = %s;", keyPair.privateKey);
+                db.executeSql(query);
+            } else {
+                keyPair.privateKey = privateexp;
+            }
+            return true;
+        }
+        return false;
+    }
+    static RSAKeyPair keyPair;
+
+    // method to check if data exists in database
+    public static boolean exists() throws SQLException {
+        // query to check if privateMod and privateexp exists
+        String query = "SELECT EXISTS (SELECT privateexp FROM keypair WHERE ID = 1 AND privateexp IS NOT NULL) AS privateexp_exists, " +
+                "EXISTS (SELECT privatemod FROM keypair WHERE ID = 1 AND privatemod IS NOT NULL) AS privatemod_exists;";
+        ResultSet resultSet = db.executeSql(query);
         assert resultSet != null;
         if (resultSet.next()) {
-            privateexp = resultSet.getObject(1, BigInteger.class);
+            boolean privateexpExists = resultSet.getBoolean("privateexp_exists");
+            boolean privatemodExists = resultSet.getBoolean("privatemod_exists");
+            return privatemodExists && privateexpExists;
         }
-        query = "SELECT privatemod from keypair as privatemod";
-        resultSet = db.executeSql(query);
-        BigInteger privatemod = null;
-        assert resultSet != null;
-        if (resultSet.next()) {
-            privatemod = resultSet.getObject(1, BigInteger.class);
-        }
-        assert privatemod != null;
-        if (!privatemod.equals(keyPair.modulus)) {
-            query = String.format("UPDATE keypair SET privatemod = %s;", keyPair.modulus.toString());
-            db.executeSql(query);
+        return false;
+    }
+    public static void generate() throws SQLException {
+        boolean state = insert();
+        String query;
+        if (!state) {
+            keyPair = rsaSetUp();
+        } else {
+            query = "SELECT privatemod from keypair as privatemod";
+            ResultSet resultSet = db.executeSql(query);
+            BigInteger privatemod = null;
+            assert resultSet != null;
+            if (resultSet.next()) {
+                privatemod = resultSet.getObject(1, BigInteger.class);
             }
-        assert privateexp != null;
-        if (!privateexp.equals(keyPair.privateKey)) {
-            query = String.format("UPDATE keypair SET privateexp = %s;", keyPair.privateKey.toString());
-            db.executeSql(query);
+            query = "SELECT privateexp from keypair as privatexp";
+            resultSet = db.executeSql(query);
+            BigInteger privateexp = null;
+            assert resultSet != null;
+            if (resultSet.next()) {
+                privateexp = resultSet.getObject(1, BigInteger.class);
             }
+            keyPair.privateKey = privateexp;
+            keyPair.modulus = privatemod;
         }
+    }
+    public static BigInteger[] enrypt(String msg) {
+        System.out.println(keyPair.modulus);
+        byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
+        int len = msgBytes.length;
+        BigInteger[] encryptedMsg = new BigInteger[len];
+        BigInteger m = null;
+        BigInteger c = null;
 
-    // private key = (d, n) = (private key exponent, public moduli)
-    // public key = (e, n) = (public key exponent, public moduli)
+        for (int i = 0; i < len; i++) {
+            m = new BigInteger(String.valueOf(msgBytes[i]));
+            c = m.modPow(keyPair.publicKey, keyPair.modulus);
+            encryptedMsg[i] = c;
+        }
+        return encryptedMsg;
+    }
 
-    // The one who needs to decrpyt needs the private key(d, n) so I need to store it somehow
-//     public static boolean decrypt(byte[] msgBytes) {
-//         BigInteger m;
-//         for (byte msgByte : msgBytes) {
-//             m = new BigInteger(String.valueOf(msgByte));
-//
-//             // both of them need to be saved
-//             // encryption code
-//             c = m.modPow(keyPair.publicKey, keyPair.modulus);
-//
-//             // decryption code
-//             r = c.modPow(keyPair.privateKey, keyPair.modulus);
-//         }
-//         return false;
-//     }
-
-
+     public static String decrypt(BigInteger[] msgBytes) {
+        System.out.println(keyPair.privateKey);
+         int len = msgBytes.length;
+         byte[] bytearr = new byte[len];
+         for (int i = 0; i < len; i++) {
+             msgBytes[i] = msgBytes[i].modPow(keyPair.privateKey, keyPair.modulus);
+         }
+         for (int i = 0; i < len; i++) {
+             bytearr[i] = (byte) msgBytes[i].intValueExact();
+         }
+         String msg = new String(bytearr, StandardCharsets.UTF_8);
+         return msg;
+     }
 }
