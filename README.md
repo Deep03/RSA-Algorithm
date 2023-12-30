@@ -23,6 +23,7 @@ This repository is going to contain the following components:
 - **Source Code:** The implementation of the RSA encryption and decryption algorithms in Java.
 
 - **Example Usage:**
+  
   <img width="850" alt="Screenshot 2023-12-30 at 6 37 57 AM" src="https://github.com/Deep03/RSA-Algorithm/assets/59480224/3ef8ea45-582b-447e-bfd1-ded8ab640938">
 
 ## Getting Started
