@@ -25,11 +25,6 @@ This repository is going to contain the following components:
 - **Example Usage:**
   <img width="850" alt="Screenshot 2023-12-30 at 6 37 57 AM" src="https://github.com/Deep03/RSA-Algorithm/assets/59480224/3ef8ea45-582b-447e-bfd1-ded8ab640938">
 
-
-- **Documentation:** Detailed documentation explaining the algorithms, the mathematics involved, and how to use the code.
-
-- **Sample Keys:** Sample public and private keys to help users get started with encryption and decryption.
-
 ## Getting Started
 
 To get started, clone this repository to your local machine and follow the documentation to understand how to use the RSA encryption algorithm. You can use the provided sample keys to experiment with encryption and decryption.
