@@ -3,7 +3,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.util.Scanner;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class CryptIt extends Main {
 
@@ -22,6 +24,28 @@ public class CryptIt extends Main {
         }
         return prime;
     }
+    private static String bytesToHex(byte[] bytes) {
+        StringBuilder result = new StringBuilder();
+        for (byte b : bytes) {
+            result.append(String.format("%02x", b));
+        }
+        return result.toString();
+    }
+
+    public static String hash(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = md.digest(password.getBytes());
+            return bytesToHex(hashBytes);
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        }
+    }
+
+    private static String createPassword(String password) {
+        return CryptIt.hash(password);
+    }
+
 
     public static class RSAKeyPair {
         public BigInteger p;
@@ -136,6 +160,27 @@ public class CryptIt extends Main {
     }
 
     public static BigInteger[] enrypt(String msg) {
+        // query to check if a password exists
+        String query = "SELECT password FROM KeyPair AS password";
+        ResultSet resultSet = db.executeSql(query);
+        try {
+            assert resultSet != null;
+            if (resultSet.next()) {
+                String hashedPass = resultSet.getString("password");
+                if (hashedPass == null) {
+                    Scanner scanner = new Scanner(System.in);
+                    System.out.print("Enter a STRONG password to decrypt: ");
+                    String pass = scanner.nextLine();
+                    String hashedString = createPassword(pass);
+                    query = String.format("UPDATE keypair SET password = %s;", hashedString);
+                    resultSet = db.executeSql(query);
+                    scanner.close();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
         int len = msgBytes.length;
         BigInteger[] encryptedMsg = new BigInteger[len];
@@ -150,16 +195,30 @@ public class CryptIt extends Main {
         return encryptedMsg;
     }
 
-     public static String decrypt(BigInteger[] msgBytes) {
-         int len = msgBytes.length;
-         byte[] bytearr = new byte[len];
-         for (int i = 0; i < len; i++) {
-             msgBytes[i] = msgBytes[i].modPow(keyPair.privateKey, keyPair.modulus);
-         }
-         for (int i = 0; i < len; i++) {
-             bytearr[i] = (byte) msgBytes[i].intValueExact();
-         }
-         String msg = new String(bytearr, StandardCharsets.UTF_8);
-         return msg;
+     public static String decrypt(BigInteger[] msgBytes, String password) throws SQLException {
+        String query = "SELECT password FROM KeyPair AS password";
+        ResultSet resultSet = db.executeSql(query);
+        String hashedPass = null;
+        assert resultSet !=null;
+        if (resultSet.next())  {
+            hashedPass = resultSet.getString("password");
+        }
+        assert hashedPass != null;
+        if (hashedPass.equals(createPassword(password))) {
+            System.out.println("REACHED HERE");
+            int len = msgBytes.length;
+            byte[] bytearr = new byte[len];
+            for (int i = 0; i < len; i++) {
+                msgBytes[i] = msgBytes[i].modPow(keyPair.privateKey, keyPair.modulus);
+            }
+            for (int i = 0; i < len; i++) {
+                bytearr[i] = (byte) msgBytes[i].intValueExact();
+            }
+            String msg = new String(bytearr, StandardCharsets.UTF_8);
+            return msg;
+        } else {
+            return null;
+        }
      }
 }
+
